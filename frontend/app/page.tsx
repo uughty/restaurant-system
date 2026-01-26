@@ -1,5 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+
 import { 
   Utensils, 
   Menu as MenuIcon, 
@@ -18,6 +21,7 @@ import {
 } from 'lucide-react';
 
 const App = () => {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
@@ -65,14 +69,18 @@ const App = () => {
     };
   }, []);
 
-  const navItems = [
-    { name: 'Home', id: 'home' },
-    { name: 'Experience', id: 'experience' },
-    { name: 'Menu', id: 'menu' },
-    { name: 'Reservations', id: 'reserve' },
+  type NavItem = {
+    name: string;
+    href: string;
+  };
+  const navItems: NavItem[] = [
+    { name: 'Home', href: '/' },
+    { name: 'Experience', href: '/experience' },
+    { name: 'Menu', href: '/menu' },
+    { name: 'Reservations', href: '/reserve' },
   ];
 
-  const scrollToSection = (id) => {
+  const scrollToSection = (id:string) => {
     if (id === 'home') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -101,71 +109,120 @@ const App = () => {
     <div className="min-h-screen bg-[#070707] text-stone-200 font-sans antialiased selection:bg-amber-500/30 text-[14px]">
       
       {/* HEADER */}
-      <header className="fixed top-0 w-full z-50 transition-all duration-500">
-        <div className={`bg-[#0a0a0a] border-b border-white/5 overflow-hidden transition-all duration-500 ease-in-out hidden lg:block ${
-          isScrolled ? 'max-h-0 opacity-0' : 'max-h-20 opacity-100 py-3'
-        }`}>
-          <div className="max-w-[1400px] mx-auto px-8 flex justify-between items-center text-[9px] tracking-[0.25em] uppercase text-stone-400 font-bold">
-            <div className="flex gap-8">
-              <span className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-amber-500/60" /> 452 W Broadway, NY</span>
-              <span className="flex items-center gap-2"><Clock className="w-3.5 h-3.5 text-amber-500/60" /> NY Time: {localTime}</span>
-            </div>
-            <div className="flex gap-8">
-              <a href="#" className="hover:text-amber-500 transition-colors">Gift Cards</a>
-              <a href="#" className="hover:text-amber-500 transition-colors">Careers</a>
-            </div>
-          </div>
+<header className="fixed top-0 w-full z-50 transition-all duration-500">
+  {/* TOP INFO BAR */}
+  <div
+    className={`bg-[#0a0a0a] border-b border-white/5 overflow-hidden transition-all duration-500 ease-in-out hidden lg:block ${
+      isScrolled ? "max-h-0 opacity-0" : "max-h-20 opacity-100 py-3"
+    }`}
+  >
+    <div className="max-w-[1800px] mx-auto px-8 flex justify-between items-center text-[11px] xl:text-[12px] tracking-[0.25em] uppercase text-stone-400 font-bold">
+      <div className="flex gap-8">
+        <span className="flex items-center gap-2">
+          <MapPin className="w-4 h-4 text-amber-500/60" />
+           452 W Broadway, NY
+        </span>
+        <span className="flex items-center gap-2">
+          <Clock className="w-4 h-4 text-amber-500/60" />
+          NY Time: {localTime}
+        </span>
+      </div>
+
+      <div className="flex gap-8">
+        <a href="#" className="hover:text-amber-500 transition-colors">
+          Gift Cards
+        </a>
+        <a href="#" className="hover:text-amber-500 transition-colors">
+          Careers
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {/* MAIN NAV */}
+  <nav
+    className={`transition-all duration-500 ease-in-out ${
+      isScrolled
+        ? "bg-black/90 backdrop-blur-xl border-b border-white/5 py-4"
+        : "bg-transparent py-8"
+    }`}
+  >
+    <div className="max-w-[1400px] mx-auto px-8 flex justify-between items-center">
+      {/* LOGO */}
+      <div
+        className="flex items-center gap-4 cursor-pointer group"
+        onClick={() => scrollToSection("home")}
+      >
+        <div className="w-9 h-9 bg-amber-500 rounded-full flex items-center justify-center transition-transform duration-700 group-hover:rotate-[360deg]">
+          <Utensils className="text-black w-5 h-5" />
         </div>
+        <span className="text-2xl lg:text-3xl font-bold tracking-[0.4em] uppercase font-serif">
+          Malivère
+        </span>
+      </div>
 
-        <nav className={`transition-all duration-500 ease-in-out ${
-          isScrolled 
-          ? 'bg-black/90 backdrop-blur-xl border-b border-white/5 py-4' 
-          : 'bg-transparent py-8'
-        }`}>
-          <div className="max-w-[1400px] mx-auto px-8 flex justify-between items-center">
-            <div className="flex items-center gap-3 cursor-pointer group" onClick={() => scrollToSection('home')}>
-              <div className="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center transition-transform duration-700 group-hover:rotate-[360deg]">
-                <Utensils className="text-black w-4 h-4" />
-              </div>
-              <span className="text-lg font-bold tracking-[0.4em] uppercase font-serif">Malivère</span>
-            </div>
+      {/* DESKTOP MENU */}
+      <div className="hidden lg:flex items-center gap-12 text-[11px] xl:text-[12px] font-black tracking-[0.35em] uppercase">
+ {navItems.map((item) => {
+    const isActive = pathname === item.href;
 
-            <div className="hidden lg:flex items-center gap-10 text-[9px] font-black tracking-[0.3em] uppercase">
-              {navItems.map((item) => (
-                <button 
-                  key={item.name} 
-                  onClick={() => scrollToSection(item.id)}
-                  className="text-stone-300 hover:text-amber-500 transition-colors relative group py-1"
-                >
-                  {item.name}
-                  <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-amber-500/50 transition-all duration-500 group-hover:w-full"></span>
-                </button>
-              ))}
-              <div className="h-4 w-[1px] bg-white/10 mx-2"></div>
-              <button className="relative p-2 text-stone-300 hover:text-amber-500 transition-colors group">
-                <ShoppingBag className="w-4.5 h-4.5" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-amber-500 text-black text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-              <button onClick={() => scrollToSection('reserve')} className="bg-amber-600/10 border border-amber-600/30 text-amber-500 px-7 py-2.5 hover:bg-amber-600 hover:text-black transition-all duration-500 text-[9px] tracking-[0.4em] font-black">
-                RESERVE
-              </button>
-            </div>
+    return (
+      <Link
+        key={item.name}
+        href={item.href}
+        className={`relative group py-1 transition-colors ${
+          isActive
+            ? 'text-amber-500'
+            : 'text-stone-300 hover:text-amber-500'
+        }`}
+      >
+        {item.name}
+        <span
+          className={`absolute bottom-0 left-0 h-[1px] bg-amber-500/60 transition-all duration-500 ${
+            isActive ? 'w-full' : 'w-0 group-hover:w-full'
+          }`}
+        />
+      </Link>
+    );
+  })}
 
-            <div className="lg:hidden flex items-center gap-4">
-               <button className="relative p-2 text-white" onClick={addToCart}>
-                <ShoppingBag className="w-6 h-6" />
-              </button>
-              <button className="text-white p-2" onClick={() => setMobileMenuOpen(true)}>
-                <MenuIcon className="w-7 h-7" />
-              </button>
-            </div>
-          </div>
-        </nav>
-      </header>
+        <div className="h-5 w-[1px] bg-white/10 mx-2"></div>
+
+        {/* CART */}
+        <button className="relative p-2 text-stone-300 hover:text-amber-500 transition-colors">
+          <ShoppingBag className="w-5.5 h-5.5" />
+          {cartCount > 0 && (
+            <span className="absolute -top-1.5 -right-1.5 bg-amber-500 text-black text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center leading-none">
+              {cartCount}
+            </span>
+          )}
+        </button>
+
+        {/* RESERVE BUTTON */}
+        <button
+          onClick={() => scrollToSection("reserve")}
+          className="bg-amber-600/10 border border-amber-600/30 text-amber-500 px-8 py-3 hover:bg-amber-600 hover:text-black transition-all duration-500 text-[11px] xl:text-[12px] tracking-[0.45em] font-black"
+        >
+          RESERVE
+        </button>
+      </div>
+
+      {/* MOBILE MENU */}
+      <div className="lg:hidden flex items-center gap-4">
+        <button className="relative p-2 text-white" onClick={addToCart}>
+          <ShoppingBag className="w-6 h-6" />
+        </button>
+
+        <button
+          className="text-white p-2"
+          onClick={() => setMobileMenuOpen(true)}
+        >
+          <MenuIcon className="w-7 h-7" />
+        </button>
+      </div>
+    </div>
+  </nav>
+</header>
 
       {/* Mobile Menu Overlay */}
       <div className={`fixed inset-0 z-[100] bg-[#070707] flex flex-col items-center justify-center gap-8 transition-all duration-700 ease-in-out ${mobileMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'}`}>
@@ -174,7 +231,7 @@ const App = () => {
         </button>
         <div className="flex flex-col items-center gap-8">
           {navItems.map((item) => (
-            <button key={item.name} onClick={() => scrollToSection(item.id)} className="text-4xl font-serif italic text-stone-200 hover:text-amber-500">
+            <button key={item.name} onClick={() => scrollToSection(item.name.toLowerCase().replace(' ', ''))} className="text-4xl font-serif italic text-stone-200 hover:text-amber-500">
               {item.name}
             </button>
           ))}
@@ -369,7 +426,7 @@ const App = () => {
               <h5 className="text-[10px] font-black uppercase tracking-[0.4em] text-white">Sitemap</h5>
               <ul className="space-y-4 text-stone-400 text-[11px] tracking-widest font-bold uppercase">
                 {navItems.map(item => (
-                  <li key={item.id}><button onClick={() => scrollToSection(item.id)} className="hover:text-amber-500 transition-colors">— {item.name}</button></li>
+                  <li key={item.name}><button onClick={() => scrollToSection(item.name.toLowerCase().replace(' ', ''))} className="hover:text-amber-500 transition-colors">— {item.name}</button></li>
                 ))}
               </ul>
             </div>
@@ -416,8 +473,8 @@ const App = () => {
           to { transform: scale(1); }
         }
         @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
+         0%, 100% { transform: translateY(0px); }
+         50% { transform: translateY(-10px); }
         }
 
         .animate-fade-in-up { animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
