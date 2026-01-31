@@ -35,7 +35,7 @@ const App = () => {
         hour: '2-digit', 
         minute: '2-digit', 
         hour12: true,
-        timeZone: 'America/New_York' 
+        timeZone: 'Kenya/East_Africa' 
       }));
     };
     updateClock();
@@ -77,7 +77,7 @@ const App = () => {
     { name: 'Home', href: '/' },
     { name: 'Experience', href: '/experience' },
     { name: 'Menu', href: '/menu' },
-    { name: 'Reservations', href: '/reserve' },
+    { name: 'Reservations', href: '/reservation' },
   ];
 
   const scrollToSection = (id:string) => {
@@ -120,11 +120,12 @@ const App = () => {
       <div className="flex gap-8">
         <span className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-amber-500/60" />
-           452 W Broadway, NY
+           Haile Selassie Avenue
+Nairobi/Kenya
         </span>
         <span className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-amber-500/60" />
-          NY Time: {localTime}
+          EST Time: {localTime}
         </span>
       </div>
 
