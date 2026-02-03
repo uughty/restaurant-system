@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
 import jallofImg from '../public/images/jallof.jpg';
+import Link from "next/link";
 import { 
   ChefHat, 
   ShoppingBag,
@@ -27,6 +28,7 @@ import {
   Flame,
   Droplets
 } from 'lucide-react';
+
 
 // ✅ TypeScript Interfaces
 interface MenuItem {
@@ -64,8 +66,8 @@ const App = () => {
   const categories: string[] = ['All', 'African', 'American', 'Indian', 'Chinese', 'European', 'Drinks'];
 
   const menuData: MenuItem[] = [
-    { id: 'af1', category: 'African', name: 'Heritage Jollof Risotto', price: 42, img: "../public/images/jallof.jpg", desc: 'Smoked scotch bonnet reduction, gold-leaf plantain.' },
-    { id: 'af2', category: 'African', name: 'Senegalese Thieboudienne', price: 48, img: "https://images.unsplash.com/photo-1604328698692-f76df9f1b3cb?auto=format&fit=crop&q=80&w=600", desc: 'Heritage red rice, break-apart grouper.' },
+    { id: 'af1', category: 'African', name: 'Heritage Jollof Risotto', price: 42, img:"./images/jallof.jpg", desc: 'Smoked scotch bonnet reduction, gold-leaf plantain.' },
+    { id: 'af2', category: 'African', name: 'Senegalese Thieboudienne', price: 48, img: "./images/senegalese.jpg", desc: 'Heritage red rice, break-apart grouper.' },
     { id: 'am1', category: 'American', name: 'Wagyu Gold Burger', price: 52, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=600", desc: 'A5 Wagyu, truffle-infused brioche, gold leaf.' },
     { id: 'am4', category: 'American', name: 'Prime Cowboy Ribeye', price: 88, img: "https://images.unsplash.com/photo-1546241072-48010ad2862c?auto=format&fit=crop&q=80&w=600", desc: '32oz dry-aged beef, bone marrow butter.' },
     { id: 'in1', category: 'Indian', name: 'Lobster Tandoor', price: 65, img: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&q=80&w=600", desc: 'Saffron foam, black garlic naan shards.' },
@@ -73,7 +75,12 @@ const App = () => {
     { id: 'eu1', category: 'European', name: 'Truffle Tagliatelle', price: 45, img: "https://images.unsplash.com/photo-1556760544-74068565f05c?auto=format&fit=crop&q=80&w=600", desc: 'Hand-pulled pasta, Perigord black truffle, 36-month parm.' },
     { id: 'eu2', category: 'European', name: 'Chateaubriand for Two', price: 120, img: "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&q=80&w=600", desc: 'Center-cut fillet, béarnaise, marrow-crusted potatoes.' },
     { id: 'dr1', category: 'Drinks', name: 'The Lumière Martini', price: 24, img: "https://images.unsplash.com/photo-1574096079513-d8259312b785?auto=format&fit=crop&q=80&w=600", desc: 'Diamond-filtered vodka, gold-pressed olive essence.' },
-    { id: 'dr2', category: 'Drinks', name: 'Vintage Negroni', price: 22, img: "https://images.unsplash.com/photo-1510626146934-755847b25d66?auto=format&fit=crop&q=80&w=600", desc: '1970s Campari, artisanal vermouth, smoked cedar.' }
+     { id: 'dr1', category: 'African', name: 'South African Braii(Barbeque)', price: 24, img: "./images/braii.jpg", desc: 'a traditional South African social gathering centered around cooking food over a wood or charcoal fire.' },
+     { id: 'dr1', category: 'Chinese', name: 'Kung Pao Chicken', price: 24, img: "./images/kungpao.jpg", desc: 'a classic Sichuan-style Chinese stir-fry dish featuring diced chicken, peanuts, vegetables, and dried chili peppers in a savory, sweet, and slightly sour sauce.' },
+     { id: 'dr1', category: 'Chinese', name: 'Szechuan Cuisine', price: 24, img: "./images/Szechuan.jpg", desc: 'Spicy Szechuan chicken stir fry made with Szechuan (Sichuan) peppers for that tongue-tingling heat.' },
+    
+  
+    
   ];
 
   interface BarCategory {
@@ -88,7 +95,7 @@ const App = () => {
       name: "Signature Cocktails", 
       icon: <GlassWater className="w-5 h-5" />,
       items: ["Obsidian Old Fashioned", "Violet Saffron Sour", "Nitro Espresso Martini"],
-      img: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=800"
+      img: "./images/nonalco.jpg"
     },
     { 
       name: "Grand Crus & Vintages", 
@@ -100,17 +107,19 @@ const App = () => {
       name: "Rare Spirits", 
       icon: <Flame className="w-5 h-5" />,
       items: ["Macallan 25 Year", "Clase Azul Ultra", "Louis XIII Cognac"],
-      img: "https://images.unsplash.com/photo-1527281405159-35d5b5d71121?auto=format&fit=crop&q=80&w=800"
+      img: "./images/Azul.webp"
     }
   ];
 
   const galleryFood: string[] = [
-    "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=800",
+    "./images/drinks.webp",
     "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80&w=800",
     "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&q=80&w=800",
     "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800",
     "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=800",
-    "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&q=80&w=800"
+    "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&q=80&w=800",
+    "./images/martins.jpg",
+    "./images/ugali.jpg"
   ];
 
   const filteredItems = useMemo(() => {
@@ -171,7 +180,13 @@ const App = () => {
             <a href="#menu" className="hover:text-amber-500 transition-colors duration-300">Menu</a>
             <a href="#bar" className="hover:text-amber-500 transition-colors duration-300">Bar</a>
             <a href="#chef" className="hover:text-amber-500 transition-colors duration-300">Chef</a>
-            <a href="#reserve" className="hover:text-amber-500 transition-colors duration-300">Book</a>
+            <Link
+          href="/reservation#reservation-form"
+          className="ml-6 text-amber-500 hover:text-amber-400 transition-colors duration-300"
+        >
+          Book
+        </Link>
+            
             <button 
               onClick={() => setShowCartOverlay(true)} 
               className="relative hover:text-amber-500 transition-colors duration-300 flex items-center gap-2"

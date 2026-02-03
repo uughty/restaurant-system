@@ -30,14 +30,17 @@ const App = () => {
   // Update local restaurant time
   useEffect(() => {
     const updateClock = () => {
-      const now = new Date();
-      setLocalTime(now.toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit', 
-        hour12: true,
-        timeZone: 'Kenya/East_Africa' 
-      }));
-    };
+  const now = new Date();
+  setLocalTime(
+    now.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: 'Africa/Nairobi', // correct timezone
+    })
+  );
+};
+
     updateClock();
     const interval = setInterval(updateClock, 60000);
     return () => clearInterval(interval);
