@@ -53,7 +53,8 @@ export default function ReservationSection() {
 const [isProcessing, setIsProcessing] = useState(false);
 const [phone, setPhone] = useState('');
 const [cardName, setCardName] = useState('');
-const [paymentStatus, setPaymentStatus] = useState<'pending' | 'success' | 'failed' | null>(null);
+const [paymentStatus, setPaymentStatus] = useState<'pending' | 'success' | 'failed' | 'cancelled' | null>(null);
+
 
   useEffect(() => {
     setIsLoaded(true);
@@ -119,31 +120,38 @@ const handlePaymentSubmit = async (e: FormEvent<HTMLFormElement>) => {
         return;
       }
 
-      try {
-        const statusRes = await fetch(`http://localhost:5000/api/payment-status/${checkoutRequestID}`);
-        const statusData = await statusRes.json();
+       try {
+    const statusRes = await fetch(`http://localhost:5000/api/payment-status/${checkoutRequestID}`);
+    const statusData = await statusRes.json();
 
-        if (statusData.status === 'success') {
-          clearInterval(poll);
-          setIsProcessing(false);
-          setPaymentStatus('success');
-          setView('success');
-        } else if (statusData.status === 'failed') {
-          clearInterval(poll);
-          setIsProcessing(false);
-          setPaymentStatus('failed');
-          alert('Payment failed or cancelled.');
-          setView('payment');
-        }
-      } catch (pollErr) {
-        console.error('Polling error:', pollErr);
-        clearInterval(poll);
-        setIsProcessing(false);
-        setPaymentStatus('failed');
-        alert('Error checking payment status.');
-        setView('payment');
-      }
-    }, 3000);
+    if (statusData.status === 'success') {
+      clearInterval(poll);
+      setIsProcessing(false);
+      setPaymentStatus('success');
+      setView('success');
+    } else if (statusData.status === 'failed') {
+      clearInterval(poll);
+      setIsProcessing(false);
+      setPaymentStatus('failed');
+      alert('Payment failed. Please try again.');
+      setView('payment');
+    } else if (statusData.status === 'cancelled') {
+      clearInterval(poll);
+      setIsProcessing(false);
+      setPaymentStatus('cancelled');
+      alert('Payment was cancelled by user.');
+      setView('failed'); // optional: show a cancelled page
+    }
+    // else keep polling
+  } catch (pollErr) {
+    console.error('Polling error:', pollErr);
+    clearInterval(poll);
+    setIsProcessing(false);
+    setPaymentStatus('failed');
+    alert('Error checking payment status.');
+    setView('payment');
+  }
+}, 3000);
 
   } catch (err: any) {
     console.error('STK Push error:', err.message);
